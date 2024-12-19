@@ -46,9 +46,9 @@
     <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
   </form>
 
-  <!-- Scripts do Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+  <!-- Scripts do Firebase (Versão Legada) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
     // Configuração do Firebase
@@ -63,8 +63,7 @@
     };
 
     // Inicializar Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    firebase.initializeApp(firebaseConfig);
 
     // Função para enviar os dados para o Firebase
     function sendToFirebase() {
@@ -73,7 +72,7 @@
       const order = document.getElementById('order').value;
 
       // Referência ao nó "pedidos" no banco de dados
-      const ordersRef = database.ref('pedidos');
+      const ordersRef = firebase.database().ref('pedidos');
 
       // Enviar dados para o Firebase
       ordersRef.push({
