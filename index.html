@@ -21,6 +21,7 @@
       font-size: 16px;
     }
   </style>
+  <link rel="icon" href="favicon.ico">
 </head>
 <body>
   <script type="module">
@@ -39,10 +40,10 @@
     };
 
     // Inicializar o Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-        // Popula as categorias no dropdown dinamicamente a partir do Firebase
+    // Popula as categorias no dropdown dinamicamente a partir do Firebase
     const categoryDropdown = document.getElementById("category");
     const productDropdown = document.getElementById("product");
     let menu = {}; // Será atualizado com os dados do Firebase
