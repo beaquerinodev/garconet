@@ -68,7 +68,6 @@
         { name: "Caipimel outra fruta", price: 35 },
         { name: "Caipimel Limão", price: 30 },
         { name: "Caipirinha Cachaça Limão", price: 25 }
-        // Adicione mais produtos aqui...
       ],
       "Drinks": [
         { name: "Pina Colada", price: 40 },
@@ -80,7 +79,6 @@
         { name: "vodka smirnoff", price: 15 },
         { name: "vodka absolut", price: 25 }
       ]
-      // Adicione mais categorias e produtos aqui...
     };
 
     // Popula as categorias no dropdown
@@ -113,12 +111,14 @@
     function sendToFirebase() {
       const table = document.getElementById("table").value;
       const notes = document.getElementById("notes").value;
-      const selectedProduct = JSON.parse(productDropdown.value); // Recupera o produto e preço
+      const selectedProductValue = productDropdown.value;
 
-      if (!selectedProduct) {
+      if (!selectedProductValue) {
         alert("Selecione um produto.");
         return;
       }
+
+      const selectedProduct = JSON.parse(selectedProductValue); // Recupera o produto e preço
 
       const order = {
         table: table,
