@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Pedidos Online</title>
-  <!-- Importar Firebase Não Modular -->
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -24,13 +21,13 @@
       font-size: 16px;
     }
     button {
-      background-color: #4CAF50;
+      background-color: #28a745;
       color: white;
       border: none;
       cursor: pointer;
     }
     button:hover {
-      background-color: #45A049;
+      background-color: #218838;
     }
   </style>
 </head>
@@ -48,7 +45,9 @@
     
     <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
   </form>
-  
+
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
   <script>
     // Configuração do Firebase
     const firebaseConfig = {
@@ -67,32 +66,29 @@
 
     // Função para enviar os dados para o Firebase
     function sendToFirebase() {
-      const name = document.getElementById('name').value.trim();
-      const table = document.getElementById('table').value.trim();
-      const order = document.getElementById('order').value.trim();
+      const name = document.getElementById('name').value;
+      const table = document.getElementById('table').value;
+      const order = document.getElementById('order').value;
 
-      if (!name || !table || !order) {
-        alert("Por favor, preencha todos os campos antes de enviar!");
-        return;
-      }
+      // Referência ao nó "pedidos" no banco de dados
+      const ordersRef = database.ref('pedidos');
 
-      const data = {
+      // Enviar dados para o Firebase
+      ordersRef.push({
         name: name,
         table: table,
         order: order,
-        supplier: "Anônimo", // Fornecedor fixo
         timestamp: new Date().toISOString()
-      };
-
-      const ordersRef = database.ref("pedidos");
-      ordersRef.push(data)
-        .then(() => {
-          alert("Pedido enviado com sucesso!");
-          document.getElementById("orderForm").reset();
-        })
-        .catch((error) => {
-          alert("Erro ao enviar o pedido: " + error.message);
-        });
+      })
+      .then(() => {
+        alert('Pedido enviado com sucesso!');
+        // Limpar o formulário
+        document.getElementById('orderForm').reset();
+      })
+      .catch((error) => {
+        console.error('Erro ao enviar pedido:', error);
+        alert('Erro ao enviar o pedido. Tente novamente.');
+      });
     }
   </script>
 </body>
