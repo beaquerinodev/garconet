@@ -25,6 +25,26 @@
   </style>
 </head>
 <body>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+  import { database } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2_SmYTeadQYjvrZRFYKWMyq56XWGyvMA",
+      authDomain: "garconete-pedidos.firebaseapp.com",
+      databaseURL: "https://garconete-pedidos-default-rtdb.firebaseio.com",
+      projectId: "garconete-pedidos",
+      storageBucket: "garconete-pedidos.appspot.com",
+      messagingSenderId: "992618642842",
+      appId: "1:992618642842:web:7941bcfaad910e58d20e23"
+    };
+
+    // Inicializar o Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+</script>
+
   <h1>Faça seu Pedido</h1>
   <form id="orderForm">
     <label for="category">Categoria:</label>
@@ -46,22 +66,8 @@
     <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
   </form>
 
-  <script>
-    // Configuração do Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyA2_SmYTeadQYjvrZRFYKWMyq56XWGyvMA",
-      authDomain: "garconete-pedidos.firebaseapp.com",
-      databaseURL: "https://garconete-pedidos-default-rtdb.firebaseio.com",
-      projectId: "garconete-pedidos",
-      storageBucket: "garconete-pedidos.appspot.com",
-      messagingSenderId: "992618642842",
-      appId: "1:992618642842:web:7941bcfaad910e58d20e23"
-    };
 
-    // Inicializar o Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
+    <script>
     // Popula as categorias no dropdown dinamicamente a partir do Firebase
     const categoryDropdown = document.getElementById("category");
     const productDropdown = document.getElementById("product");
