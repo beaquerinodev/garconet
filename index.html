@@ -46,7 +46,7 @@
     <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
   </form>
 
-  <!-- Scripts do Firebase (Versão Legada) -->
+  <!-- Scripts do Firebase Legados -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -57,7 +57,7 @@
       authDomain: "garconete-pedidos.firebaseapp.com",
       databaseURL: "https://garconete-pedidos-default-rtdb.firebaseio.com",
       projectId: "garconete-pedidos",
-      storageBucket: "garconete-pedidos.firebasestorage.app",
+      storageBucket: "garconete-pedidos.appspot.com",
       messagingSenderId: "992618642842",
       appId: "1:992618642842:web:7941bcfaad910e58d20e23"
     };
@@ -65,16 +65,17 @@
     // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
 
-    // Função para enviar os dados para o Firebase
+    // Função para enviar dados ao Firebase
     function sendToFirebase() {
       const name = document.getElementById('name').value;
       const table = document.getElementById('table').value;
       const order = document.getElementById('order').value;
 
-      // Referência ao nó "pedidos" no banco de dados
-      const ordersRef = firebase.database().ref('pedidos');
+      // Referência ao nó "pedidos" no Realtime Database
+      const database = firebase.database();
+      const ordersRef = database.ref('pedidos');
 
-      // Enviar dados para o Firebase
+      // Enviar os dados
       ordersRef.push({
         name: name,
         table: table,
@@ -83,11 +84,10 @@
       })
       .then(() => {
         alert('Pedido enviado com sucesso!');
-        // Limpar o formulário
-        document.getElementById('orderForm').reset();
+        document.getElementById('orderForm').reset(); // Limpa o formulário
       })
       .catch((error) => {
-        console.error('Erro ao enviar pedido:', error);
+        console.error('Erro ao enviar o pedido:', error);
         alert('Erro ao enviar o pedido. Tente novamente.');
       });
     }
