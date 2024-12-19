@@ -3,56 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Pedidos Online</title>
+  <title>Sistema de Pedidos</title>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
       text-align: center;
+      margin: 20px;
     }
     form {
       max-width: 400px;
       margin: auto;
     }
-    input, textarea, button {
+    select, textarea, input, button {
       width: 100%;
       margin: 10px 0;
       padding: 10px;
       font-size: 16px;
-    }
-    button {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #218838;
     }
   </style>
 </head>
 <body>
   <h1>Faça seu Pedido</h1>
   <form id="orderForm">
-    <label for="name">Nome:</label>
-    <input type="text" id="name" placeholder="Digite seu nome" required>
-    
+    <label for="category">Categoria:</label>
+    <select id="category" onchange="populateProducts()" required>
+      <option value="">Selecione uma categoria</option>
+    </select>
+
+    <label for="product">Produto:</label>
+    <select id="product" required>
+      <option value="">Selecione um produto</option>
+    </select>
+
+    <label for="notes">Observações:</label>
+    <textarea id="notes" placeholder="Exemplo: sem açúcar, gelo extra"></textarea>
+
     <label for="table">Número da Mesa:</label>
     <input type="number" id="table" placeholder="Digite o número da mesa" required>
-    
-    <label for="order">Pedido:</label>
-    <textarea id="order" placeholder="Digite o seu pedido" required></textarea>
-    
+
     <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
   </form>
 
-  <!-- Scripts do Firebase Legados -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-  <script>
+  <script type="module">
     // Configuração do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
     const firebaseConfig = {
+       const firebaseConfig = {
       apiKey: "AIzaSyA2_SmYTeadQYjvrZRFYKWMyq56XWGyvMA",
       authDomain: "garconete-pedidos.firebaseapp.com",
       databaseURL: "https://garconete-pedidos-default-rtdb.firebaseio.com",
@@ -62,34 +62,86 @@
       appId: "1:992618642842:web:7941bcfaad910e58d20e23"
     };
 
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-    // Função para enviar dados ao Firebase
+    // Tabela de produtos e preços
+    const menu = {
+      "Caipirinhas": [
+        { name: "Caipimel outra fruta", price: 35 },
+        { name: "Caipimel Limão", price: 30 },
+        { name: "Caipirinha Cachaça Limão", price: 25 }
+        // Adicione mais produtos aqui...
+      ],
+      "Drinks": [
+        { name: "Pina Colada", price: 40 },
+        { name: "Beijo na Boca", price: 40 },
+        { name: "Amor Perfeito", price: 40 }
+      ],
+      "Doses": [
+        { name: "cachaça velho barreiro", price: 10 },
+        { name: "vodka smirnoff", price: 15 },
+        { name: "vodka absolut", price: 25 }
+      ]
+      // Adicione mais categorias e produtos aqui...
+    };
+
+    // Popula as categorias no dropdown
+    const categoryDropdown = document.getElementById("category");
+    const productDropdown = document.getElementById("product");
+
+    Object.keys(menu).forEach(category => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categoryDropdown.appendChild(option);
+    });
+
+    // Atualiza os produtos com base na categoria selecionada
+    function populateProducts() {
+      const selectedCategory = categoryDropdown.value;
+      productDropdown.innerHTML = '<option value="">Selecione um produto</option>';
+
+      if (menu[selectedCategory]) {
+        menu[selectedCategory].forEach(product => {
+          const option = document.createElement("option");
+          option.value = JSON.stringify(product); // Passa o produto inteiro (nome e preço)
+          option.textContent = product.name;
+          productDropdown.appendChild(option);
+        });
+      }
+    }
+
+    // Envia o pedido para o Firebase
     function sendToFirebase() {
-      const name = document.getElementById('name').value;
-      const table = document.getElementById('table').value;
-      const order = document.getElementById('order').value;
+      const table = document.getElementById("table").value;
+      const notes = document.getElementById("notes").value;
+      const selectedProduct = JSON.parse(productDropdown.value); // Recupera o produto e preço
 
-      // Referência ao nó "pedidos" no Realtime Database
-      const database = firebase.database();
-      const ordersRef = database.ref('pedidos');
+      if (!selectedProduct) {
+        alert("Selecione um produto.");
+        return;
+      }
 
-      // Enviar os dados
-      ordersRef.push({
-        name: name,
+      const order = {
         table: table,
-        order: order,
+        notes: notes,
+        product: selectedProduct.name,
+        price: selectedProduct.price, // Adiciona o preço no Firebase
         timestamp: new Date().toISOString()
-      })
-      .then(() => {
-        alert('Pedido enviado com sucesso!');
-        document.getElementById('orderForm').reset(); // Limpa o formulário
-      })
-      .catch((error) => {
-        console.error('Erro ao enviar o pedido:', error);
-        alert('Erro ao enviar o pedido. Tente novamente.');
-      });
+      };
+
+      const ordersRef = ref(database, "pedidos");
+      push(ordersRef, order)
+        .then(() => {
+          alert("Pedido enviado com sucesso!");
+          document.getElementById("orderForm").reset();
+          productDropdown.innerHTML = '<option value="">Selecione um produto</option>';
+        })
+        .catch(error => {
+          console.error("Erro ao enviar pedido:", error);
+          alert("Erro ao enviar o pedido. Tente novamente.");
+        });
     }
   </script>
 </body>
