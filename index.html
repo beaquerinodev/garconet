@@ -41,32 +41,8 @@
     // Inicializar o Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.getDatabase(app);
-</script>
 
-  <h1>Faça seu Pedido</h1>
-  <form id="orderForm">
-    <label for="category">Categoria:</label>
-    <select id="category" onchange="populateProducts()" required>
-      <option value="">Selecione uma categoria</option>
-    </select>
-
-    <label for="product">Produto:</label>
-    <select id="product" required>
-      <option value="">Selecione um produto</option>
-    </select>
-
-    <label for="notes">Observações:</label>
-    <textarea id="notes" placeholder="Exemplo: sem açúcar, gelo extra"></textarea>
-
-    <label for="table">Número da Mesa:</label>
-    <input type="number" id="table" placeholder="Digite o número da mesa" required>
-
-    <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
-  </form>
-
-
-    <script>
-    // Popula as categorias no dropdown dinamicamente a partir do Firebase
+        // Popula as categorias no dropdown dinamicamente a partir do Firebase
     const categoryDropdown = document.getElementById("category");
     const productDropdown = document.getElementById("product");
     let menu = {}; // Será atualizado com os dados do Firebase
@@ -143,6 +119,28 @@
 
     // Chama o carregamento do menu ao carregar a página
     window.onload = loadMenuFromFirebase;
-  </script>
+
+</script>
+
+  <h1>Faça seu Pedido</h1>
+  <form id="orderForm">
+    <label for="category">Categoria:</label>
+    <select id="category" onchange="populateProducts()" required>
+      <option value="">Selecione uma categoria</option>
+    </select>
+
+    <label for="product">Produto:</label>
+    <select id="product" required>
+      <option value="">Selecione um produto</option>
+    </select>
+
+    <label for="notes">Observações:</label>
+    <textarea id="notes" placeholder="Exemplo: sem açúcar, gelo extra"></textarea>
+
+    <label for="table">Número da Mesa:</label>
+    <input type="number" id="table" placeholder="Digite o número da mesa" required>
+
+    <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
+  </form>
 </body>
 </html>
