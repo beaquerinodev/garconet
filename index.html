@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Pedidos</title>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,20 +23,40 @@
       font-size: 16px;
     }
   </style>
-  <link rel="icon" href="favicon.ico">
 </head>
 <body>
-  <script type="module">
+  <h1>Faça seu Pedido</h1>
+  <form id="orderForm">
+    <label for="category">Categoria:</label>
+    <select id="category" onchange="populateProducts()" required>
+      <option value="">Selecione uma categoria</option>
+    </select>
+
+    <label for="product">Produto:</label>
+    <select id="product" required>
+      <option value="">Selecione um produto</option>
+    </select>
+
+    <label for="notes">Observações:</label>
+    <textarea id="notes" placeholder="Exemplo: sem açúcar, gelo extra"></textarea>
+
+    <label for="table">Número da Mesa:</label>
+    <input type="number" id="table" placeholder="Digite o número da mesa" required>
+
+    <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
+  </form>
+
+  <script>
     // Configuração do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyA2_SmYTeadQYjvrZRFYKWMyq56XWGyvMA",
-  authDomain: "garconete-pedidos.firebaseapp.com",
-  databaseURL: "https://garconete-pedidos-default-rtdb.firebaseio.com",
-  projectId: "garconete-pedidos",
-  storageBucket: "garconete-pedidos.firebasestorage.app",
-  messagingSenderId: "992618642842",
-  appId: "1:992618642842:web:7941bcfaad910e58d20e23"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2_SmYTeadQYjvrZRFYKWMyq56XWGyvMA",
+      authDomain: "garconete-pedidos.firebaseapp.com",
+      databaseURL: "https://garconete-pedidos-default-rtdb.firebaseio.com",
+      projectId: "garconete-pedidos",
+      storageBucket: "garconete-pedidos.appspot.com",
+      messagingSenderId: "992618642842",
+      appId: "1:992618642842:web:7941bcfaad910e58d20e23"
+    };
 
     // Inicializar o Firebase
     const app = firebase.initializeApp(firebaseConfig);
@@ -119,28 +139,6 @@ const firebaseConfig = {
 
     // Chama o carregamento do menu ao carregar a página
     window.onload = loadMenuFromFirebase;
-
-</script>
-
-  <h1>Faça seu Pedido</h1>
-  <form id="orderForm">
-    <label for="category">Categoria:</label>
-    <select id="category" onchange="populateProducts()" required>
-      <option value="">Selecione uma categoria</option>
-    </select>
-
-    <label for="product">Produto:</label>
-    <select id="product" required>
-      <option value="">Selecione um produto</option>
-    </select>
-
-    <label for="notes">Observações:</label>
-    <textarea id="notes" placeholder="Exemplo: sem açúcar, gelo extra"></textarea>
-
-    <label for="table">Número da Mesa:</label>
-    <input type="number" id="table" placeholder="Digite o número da mesa" required>
-
-    <button type="button" onclick="sendToFirebase()">Enviar Pedido</button>
-  </form>
+  </script>
 </body>
 </html>
